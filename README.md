@@ -26,7 +26,7 @@ To create a working, reproducible system that:
 | **viz_light.py** | Lightweight script to plot hypnogram (sleep stage over time) using only numpy and matplotlib. Does NOT require TensorFlow or pandas. Reads from predictions.csv. |
 | **sleep_model.h5** | Saved trained model file. Can be loaded later to make new predictions. |
 | **predictions.csv** | CSV file containing true and predicted sleep stages for the hold-out set. Used by viz_light.py to generate plots. |
-| **hypnogram.png** | Final visualization output - shows how well the model matches real sleep stages. |
+| **img.png** | Final visualization output - shows how well the model matches real sleep stages. |
 
 ### Important Note
 There is also an older `train.py` file - it works but may cause dependency issues if you try to run it with newer packages. Use `train_and_save_preds.py` instead for reliability.
@@ -65,7 +65,7 @@ Run visualization:
 ```powershell
 python viz_light.py
 ```
--> This generates hypnogram.png.
+-> This generates img.png.
 
 _Always switch between environments using deactivate and then activating the right one._
 
@@ -89,6 +89,26 @@ Run in terminal:
 ```bash
 wget -r -N -c -np https://physionet.org/files/sleep-accel/1.0.0/
 ```
+This creates a folder: physionet.org/files/sleep-accel/1.0.0/
+### 2. Build the Docker image 
+```bash
+docker build -t wakez-sleep-staging .
+```
+### 3. Run training
+```bash
+docker run --rm -v ${PWD}:/app wakez-sleep-staging
+```
+_On Windows PowerShell, use:_
+```bash
+docker run --rm -v ${PWD}:/app wakez-sleep-staging
+```
+### 4. Outputs
+After running, you’ll get:
+
+- **predictions.csv** - true vs predicted sleep stages
+- **img.png** - visualization of results
+ 
+-> These files are already included in this repo as proof of successful execution.
 
 ### Model Architecture
 We used a simple LSTM (Long Short-Term Memory) network because sleep stages change over time - knowing the previous few minutes helps predict the current one.
@@ -106,7 +126,7 @@ This keeps things stable and reproducible.
 ## Where are the key outputs?
 - Trained model: **sleep_model.h5** - saved after training. Can be reused to predict new data.
 - Prediction results: **predictions.csv** - contains true and predicted labels for the 10% test set. Used to generate the plot.
-- Final visualization: **hypnogram.png** - shows how well the model matched real sleep stages.
+- Final visualization: **img.png** - shows how well the model matched real sleep stages.
 
 _Advice: If you want to test the model on new data, load **sleep_model.h5** and feed it 30-second sequences of [x, y, z, hr, steps]._
 
