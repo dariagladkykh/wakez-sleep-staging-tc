@@ -80,6 +80,16 @@ We used the PhysioNet Sleep-Accel dataset, which contains:
 
 Each night is split into 30-second windows (epochs) - this is standard in sleep research.
 
+## How to Run with Docker
+
+### 1. Download the dataset
+The project uses the [PhysioNet Sleep-Accel dataset](https://physionet.org/content/sleep-accel/1.0.0/).
+
+Run in terminal:
+```bash
+wget -r -N -c -np https://physionet.org/files/sleep-accel/1.0.0/
+
+
 ### Model Architecture
 We used a simple LSTM (Long Short-Term Memory) network because sleep stages change over time - knowing the previous few minutes helps predict the current one.
 
