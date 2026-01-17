@@ -1,4 +1,3 @@
-# train_and_save_preds.py
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
@@ -34,9 +33,16 @@ def main():
     print("\nClassification Report:")
     print(classification_report(y_val, y_pred, target_names=['Wake', 'NREM', 'REM']))
 
+    report = classification_report(y_val, y_pred, target_names=['Wake', 'NREM', 'REM'], output_dict=True)
+    rem_recall = report['REM']['recall']
+    rem_precision = report['REM']['precision']
+    overall_acc = report['accuracy']
+
+    print(f"\n OVERALL ACCURACY: {overall_acc:.2%}")
+    print(f" REM RECALL: {rem_recall:.2%} (ability to detect true REM)")
+    print(f" REM PRECISION: {rem_precision:.2%} (confidence when predicting REM)")
+
     model.save("sleep_model.h5")
-
-
     np.savetxt("predictions.csv", np.column_stack([y_val, y_pred]), delimiter=",", header="true,pred", comments="")
     print("Predictions saved to predictions.csv")
 
